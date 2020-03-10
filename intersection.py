@@ -46,4 +46,26 @@ class Intersection:
                         car.accells.append((d, 0.1))
             car.accells.sort(key=lambda x: x[0])
     
-    
+    def firstCollision(self, cars):
+        for i in range(len(cars) - 1):
+            # This will contain the indices of the rails that self.rails[i]
+            # will collide with.
+            collision_car_indices= []
+            car_1 = cars[i]
+            for j in range(i + 1, len(cars)):
+                car_2 = cars[j]
+                if car_1.rail != car_2.rail:
+                    if self.collisions_dict[car_1.rail][car_2.rail]:
+                        for d in self.collisions_dict[car_1.rail][car_2.rail]:
+                            collision_car_indices.append((j,d))
+            
+            collision_car_indices.sort(key=lambda x: x[1])
+
+            for j, _ in collision_car_indices:
+                car_2 = cars[j]
+                collision_time = self.collision(car_1, car_2)
+                if collision_time >= 0:
+                    print("Coll between", car_1, car_2)
+                    return i, j, collision_time
+        
+        return None
