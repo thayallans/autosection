@@ -228,3 +228,65 @@ class Intersection:
         print("got cars:", newA, newD)
 
         return newA, newD
+
+    def collision(self, carA: Car, carB: Car):
+        """
+        This returns whether or not two cars are going to collide.
+        """
+        # TODO:  Make sure that we check for collisions if the time is past the start_time.
+        time = min(carA.get_time(), carB.get_time())
+        t = 0
+        while t <= time:
+            if t < carA.start_time or t < carB.start_time:
+                t += 5
+                continue
+            a = carA.get_location(t)
+            b = carB.get_location(t)
+            if distance(a, b) < carA.radius + carB.radius:
+                return t
+            t += 5
+        return -1
+
+    def find_intersection(self, rail_1, rail_2):
+        """
+        Given two rails, returns the point of intersection, or None if they do not intersect.
+
+        :param rail_1:
+        :param rail_2:
+        :return: The point of intersection of rail_1 and rail_2, or None if they don't intersect.
+        """
+        step_1 = 0
+        step_2 = rail_2.total_distance
+        min_dist = distance(rail_1.get(step_1), rail_2.get(step_2))
+        min_steps = []
+        down_again = 1
+        interval = 0.05
+        while step_1 < rail_1.total_distance and step_2 >= 0:
+            dist1 = distance(rail_1.get(step_1 + interval), rail_2.get(step_2))
+            dist2 = distance(rail_1.get(step_1), rail_2.get(step_2 - interval))
+
+            if dist1 <= dist2:
+                step_1 += interval
+            if dist1 >= dist2:
+                step_2 -= interval
+
+            min_dist1_dist2 = min(dist1, dist2)
+            if min_dist is None or min_dist1_dist2 < min_dist:
+                min_dist = min_dist1_dist2
+                if down_again < 1:
+                    down_again += 1
+            elif min_dist is not None and min_dist1_dist2 > min_dist and down_again > 0 and min_dist < 10:
+                down_again = -10
+                min_steps.append((step_1, step_2))
+
+            if down_again < 1:
+                min_dist = min_dist1_dist2
+
+        return min_steps
+
+
+def distance(pos_1: Tuple[int, int], pos_2: Tuple[int, int]):
+    """
+    Returns the distance between two (x, y) locations.
+    """
+    return math.sqrt((pos_1[0] - pos_2[0]) ** 2 + (pos_1[1] - pos_2[1]) ** 2)
