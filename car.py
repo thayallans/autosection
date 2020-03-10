@@ -1,7 +1,7 @@
 import math
 from rail import Rail
 
-
+max_acceleration = 1
 class Car:
     def __init__(self, start_speed: float, rail: Rail, name, start_time=0, accells=None):
         self.start_speed = start_speed
