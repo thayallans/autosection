@@ -130,4 +130,101 @@ class Intersection:
             except ValueError:
                 print("VE")
                 pass
-    
+
+    def handleA(self, carA, carD, time):
+        """
+        This function stops two cars from colliding.
+        carA is the car to accelerate
+        carD is the car to decelerate
+        time is the time of the collision
+
+        It works by first changing carAs last acceleration (before the collision) so it arrives on the intersection at
+        the time.
+        Next it iteratively slows carD until they do not hit at the intersection.
+
+        TODO:
+        This should then call update with the changed cars in order to propagate the changes.
+        It should return the total amount of speed changes so its parent update can optimize which car slows
+        down / speeds up.
+        """
+
+        didSomething = False
+
+        i, dist, speed, a, dt = carA.get_interval(time)
+        a2 = a
+        newA = carA.copy()
+        if i is not None:
+            didSomething = True
+            while a2 < max_acceleration and self.collision(carD, newA) != -1:
+                a2 += 0.01
+                for j in range(i, -1, -1):
+                    if newA.accellsI <= j:
+                        newA.accells[j] = (newA.accells[j][0], a2)
+            newA.accellsI = i
+        # print(newA)
+
+        newD = carD.copy()
+        #print(newD, time)
+        i, dist, speed, a, dt = newD.get_interval(time)
+        if i is not None:
+            didSomething = True
+            a2 = a
+            while a2 >= -max_acceleration:
+                newD.accells[i] = (newD.accells[i][0], a2)
+                if self.collision(newD, newA) == -1:
+                    break
+                a2 -= 0.01
+
+        if not didSomething:
+            raise ValueError("Didn't do anything.")
+        print("got cars:", newA, newD)
+
+        return newA, newD
+
+    def handleD(self, carA, carD, time):
+        """
+        This function stops two cars from colliding.
+        carA is the car to accelerate
+        carD is the car to decelerate
+        time is the time of the collision
+
+        It works by first changing carAs last acceleration (before the collision) so it arrives on the intersection at
+        the time.
+        Next it iteratively slows carD until they do not hit at the intersection.
+
+        TODO:
+        This should then call update with the changed cars in order to propagate the changes.
+        It should return the total amount of speed changes so its parent update can optimize which car slows
+        down / speeds up.
+        """
+
+        didSomething = False
+
+        i, dist, speed, a, dt = carD.get_interval(time)
+        a2 = a
+        newD = carD.copy()
+        if i is not None:
+            didSomething = True
+            while a2 >= -max_acceleration and self.collision(newD, carA) != -1:
+                a2 -= 0.001
+                for j in range(i, -1, -1):
+                    if newD.accellsI <= j:
+                        newD.accells[j] = (newD.accells[j][0], a2)
+            newD.accellsI = i
+
+        newA = carA.copy()
+        i, dist, speed, a, dt = newA.get_interval(time)
+        if i is not None:
+            didSomething = True
+            a2 = a
+            while a2 < max_acceleration:
+                newA.accells[i] = (newA.accells[i][0], a2)
+                if self.collision(newD, newA) == -1:
+                    break
+                a2 += 0.001
+
+        if not didSomething:
+            raise ValueError("Didn't do anything.")
+        print("got cars:", newA, newD)
+
+        return newA, newD
