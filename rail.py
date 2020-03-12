@@ -5,7 +5,7 @@ import math
 class Rail:
     name = "Rail"
 
-    def __init_(self, fun: Callable, distance):
+    def __init__(self, fun: Callable, distance):
         self.fun = fun
         self.total_distance = distance
 
@@ -134,10 +134,8 @@ class LeftRail2(Rail):
         self.inside_width = 100
         self.curve_length = (2 * math.pi * 75) / 4
         self.total_distance = self.outside_len + self.curve_length
-        self.curve_scalar_prop = self.curve_length / \
-            (self.outside_len * 2 + self.curve_length)
-        self.cutoffs = [(1 - self.curve_scalar_prop) * 1000 / 2,
-                        1000 - (1 - self.curve_scalar_prop) * 1000 / 2]
+        self.curve_scalar_prop = self.curve_length / (self.outside_len * 2 + self.curve_length)
+        self.cutoffs = [(1 - self.curve_scalar_prop) * 1000 / 2, 1000 - (1 - self.curve_scalar_prop) * 1000 / 2]
         self.inner_start = (-25, -50)
         self.transform = transform
 
@@ -149,13 +147,11 @@ class LeftRail2(Rail):
     def get(self, scalar):
         if scalar < self.cutoffs[0]:
             len_along_entry = scalar * self.outside_len / self.cutoffs[0]
-            x_cord = 0 - (self.outside_len - len_along_entry +
-                          self.inside_width / 2)
+            x_cord = 0 - (self.outside_len - len_along_entry + self.inside_width / 2)
             y_cord = -25
             return self.applyTransform(x_cord, y_cord, self.transform)
         elif scalar > self.cutoffs[1]:
-            len_along_entry = (1000 - scalar) * \
-                self.outside_len / (1000 - self.cutoffs[1])
+            len_along_entry = (1000 - scalar) * self.outside_len / (1000 - self.cutoffs[1])
             y_cord = self.outside_len - len_along_entry + self.inside_width / 2
             x_cord = 25
             return self.applyTransform(x_cord, y_cord, self.transform)
@@ -173,10 +169,8 @@ class RightRail2(Rail):
         self.outside_len = 100
         self.inside_width = 100
         self.curve_length = (2 * math.pi * 25) / 4
-        self.curve_scalar_prop = self.curve_length / \
-            (self.outside_len * 2 + self.curve_length)
-        self.cutoffs = [(1 - self.curve_scalar_prop) * 1000 / 2,
-                        1000 - (1 - self.curve_scalar_prop) * 1000 / 2]
+        self.curve_scalar_prop = self.curve_length / (self.outside_len * 2 + self.curve_length)
+        self.cutoffs = [(1 - self.curve_scalar_prop) * 1000 / 2, 1000 - (1 - self.curve_scalar_prop) * 1000 / 2]
         self.inner_start = (-25, -50)
         self.transform = transform
 
@@ -189,13 +183,11 @@ class RightRail2(Rail):
         scalar = 1000 - scalar
         if scalar < self.cutoffs[0]:
             len_along_entry = scalar * self.outside_len / self.cutoffs[0]
-            x_cord = 0 - (self.outside_len - len_along_entry +
-                          self.inside_width / 2)
+            x_cord = 0 - (self.outside_len - len_along_entry + self.inside_width / 2)
             y_cord = 25
             return self.applyTransform(x_cord, y_cord, self.transform)
         elif scalar > self.cutoffs[1]:
-            len_along_entry = (1000 - scalar) * \
-                self.outside_len / (1000 - self.cutoffs[1])
+            len_along_entry = (1000 - scalar) * self.outside_len / (1000 - self.cutoffs[1])
             y_cord = self.outside_len - len_along_entry + self.inside_width / 2
             x_cord = -25
             return self.applyTransform(x_cord, y_cord, self.transform)

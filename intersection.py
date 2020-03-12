@@ -17,7 +17,7 @@ class Intersection:
 
     def init_collisions_dict(self):
         """
-        Initializes the dictionary of collsion points between
+        Initializes the dictionary of collision points between
         rails, setting each value to None.
         """
         for rail_a in self.rails:
@@ -30,11 +30,11 @@ class Intersection:
             for rail_b in self.rails:
                 if rail_a != rail_b:
                     if self.collisions_dict[rail_a][rail_b]:
-                        # We have already filled in this dictionary entry
+                        # We have already filled in this dictionary entry.
                         continue
                     ints = self.find_intersection(rail_a, rail_b)
                     for a, b in ints:
-                        # if the rails don't colide, the dictionary value stays at 0.
+                        # If the rails don't collide, the dictionary value stays at 0.
                         self.collisions_dict[rail_a][rail_b].append(a)
                         self.collisions_dict[rail_b][rail_a].append(b)
 
@@ -48,8 +48,7 @@ class Intersection:
 
     def firstCollision(self, cars):
         for i in range(len(cars) - 1):
-            # This will contain the indices of the rails that self.rails[i]
-            # will collide with.
+            # This will contain the indices of the rails that self.rails[i] will collide with.
             collision_car_indices = []
             car_1 = cars[i]
             for j in range(i + 1, len(cars)):
@@ -65,9 +64,8 @@ class Intersection:
                 car_2 = cars[j]
                 collision_time = self.collision(car_1, car_2)
                 if collision_time >= 0:
-                    print("Coll between", car_1, car_2)
+                    print("Coll between", car_1, car_2)#, car_1.get_location(collision_time), car_2.get_location(collision_time))
                     return i, j, collision_time
-
         return None
 
     def update(self):
@@ -131,6 +129,7 @@ class Intersection:
                 print("VE")
                 pass
 
+
     def handleA(self, carA, carD, time):
         """
         This function stops two cars from colliding.
@@ -161,7 +160,7 @@ class Intersection:
                     if newA.accellsI <= j:
                         newA.accells[j] = (newA.accells[j][0], a2)
             newA.accellsI = i
-        # print(newA)
+        #print(newA)
 
         newD = carD.copy()
         #print(newD, time)
@@ -211,8 +210,10 @@ class Intersection:
                     if newD.accellsI <= j:
                         newD.accells[j] = (newD.accells[j][0], a2)
             newD.accellsI = i
+        #print(newA)
 
         newA = carA.copy()
+        #print(newD, time)
         i, dist, speed, a, dt = newA.get_interval(time)
         if i is not None:
             didSomething = True
