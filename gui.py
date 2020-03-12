@@ -297,7 +297,7 @@ class IntersectionView:
 class ZipperView(IntersectionView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        pygame.display.set_caption("Traffic Zipper")
+        pygame.display.set_caption("Autosection")
 
         self.car_img = pygame.image.load("assets/car.png")
         self.car_rect = self.car_img.get_rect()
